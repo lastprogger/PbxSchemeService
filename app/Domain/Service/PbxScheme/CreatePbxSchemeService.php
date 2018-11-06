@@ -55,7 +55,7 @@ class CreatePbxSchemeService
         $tmpIdMap = [];
 
         $pbxScheme = new PbxScheme();
-        $pbxScheme->user_id = $request->getInitiatorUserId();
+        $pbxScheme->user_id = $request->getUserId();
         $pbxScheme->save();
 
         foreach ($request->getNodes() as $nodeInputArray) {
