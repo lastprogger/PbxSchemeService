@@ -15,7 +15,7 @@ class CreateTablePbx extends Migration
     {
         Schema::create('pbx', function (Blueprint $table) {
 
-            $table->increments('id');
+            $table->uuid('id')->primary();
             $table->uuid('pbx_scheme_id');
             $table->uuid('user_id');
             $table->string('name', 225)->nullable();
