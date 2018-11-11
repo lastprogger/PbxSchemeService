@@ -23,5 +23,6 @@ Route::group(
     ],
     function () {
         Route::resource('pbx-scheme', 'PbxSchemeController');
+        Route::resource('pbx', 'PbxController');
     }
 );

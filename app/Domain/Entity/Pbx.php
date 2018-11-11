@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Ramsey\Uuid\Uuid;
 
 
 /**
  * App\Entity\CarBrand
  *
- * @property integer        $id
+ * @property string         $id
  * @property string         $pbx_scheme_id
  * @property string         $user_id
  * @property string         $name
@@ -26,15 +27,25 @@ class Pbx extends Model
 {
     use SoftDeletes;
 
+    public $incrementing = false;
+
     protected $table = 'pbx';
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->id = Uuid::uuid4()->toString();
+        });
+    }
+
     /**
      * @return HasOne
      */
-    public function pbxScheme()
+    public function scheme()
     {
-        return $this->hasOne(PbxScheme::class, 'pbx_scheme_id');
+        return $this->hasOne(PbxScheme::class, 'id', 'pbx_scheme_id');
     }
 }

@@ -26,15 +26,8 @@ class PbxSchemeControllerTest extends TestCase
 
     public function testCreatePbxScheme()
     {
-        $nodeType1       = new NodeType();
-        $nodeType1->type = NodeType::TYPE_BASIC;
-        $nodeType1->name = NodeType::NAME_VOICE_ANNOUNCE;
-        $nodeType1->save();
-
-        $nodeType2       = new NodeType();
-        $nodeType2->type = NodeType::TYPE_CONDITION;
-        $nodeType2->name = NodeType::NAME_GROUP_CALL;
-        $nodeType2->save();
+        $nodeType1 = factory(NodeType::class)->state(NodeType::TYPE_BASIC)->create();
+        $nodeType2 = factory(NodeType::class)->state(NodeType::TYPE_CONDITION)->create();
 
         $response = $this->json(
             'POST',

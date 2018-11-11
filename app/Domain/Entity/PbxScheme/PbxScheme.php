@@ -12,11 +12,13 @@ use Ramsey\Uuid\Uuid;
 /**
  * App\Entity\CarBrand
  *
- * @property string $id
- * @property string $user_id
- * @property Carbon $deleted_at
- * @property Carbon $created_at
- * @property Carbon $updated_at
+ * @property string                               $id
+ * @property string                               $user_id
+ * @property Carbon                               $deleted_at
+ * @property Carbon                               $created_at
+ * @property Carbon                               $updated_at
+ * @property-read PbxSchemeNode[]|HasMany         $nodes
+ * @property-read PbxSchemeNodeRelation[]|HasMany $nodeRelations
  */
 class PbxScheme extends Model
 {
@@ -33,13 +35,24 @@ class PbxScheme extends Model
      */
     public function nodes()
     {
-        return $this->hasMany(PbxSchemeNode::class, 'pbx_scheme_id');
+        return $this->hasMany(PbxSchemeNode::class, 'pbx_scheme_id', 'id');
     }
+
+    /**
+     * @return HasMany
+     */
+    public function nodeRelations()
+    {
+        return $this->hasMany(PbxSchemeNodeRelation::class, 'pbx_scheme_id', 'id');
+    }
+
     protected static function boot()
     {
         parent::boot();
-        static::creating(function ($model) {
-            $model->id = Uuid::uuid4()->toString();
-        });
+        static::creating(
+            function ($model) {
+                $model->id = Uuid::uuid4()->toString();
+            }
+        );
     }
 }

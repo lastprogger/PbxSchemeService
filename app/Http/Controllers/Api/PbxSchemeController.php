@@ -14,6 +14,7 @@ use App\Domain\Service\PbxScheme\Exceptions\BadInputDataException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PbxScheme\CreatePbxSchemeRequest;
 use App\Domain\Entity\Pbx;
+use App\Http\Requests\Request;
 use Illuminate\Http\Response;
 
 class PbxSchemeController extends Controller
@@ -31,7 +32,7 @@ class PbxSchemeController extends Controller
 
             $pbx = new Pbx();
             $pbx->pbx_scheme_id = $pbxScheme->id;
-            $pbx->user_id = $request->getInitiatorUserId();
+            $pbx->user_id = $request->getUserId();
             $pbx->save();
 
             return response()->json(
@@ -41,7 +42,7 @@ class PbxSchemeController extends Controller
             );
         } catch (BadInputDataException $e) {
             return response($e->getMessage(), Response::HTTP_BAD_REQUEST);
-        } catch (\Exception $e) {dd($e);
+        } catch (\Exception $e) {
             return response('INTERNAL SERVER ERROR', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
