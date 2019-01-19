@@ -77,6 +77,6 @@ class PbxSchemeNode extends Model
      */
     public function nodeType()
     {
-        return $this->hasOne(NodeType::class, 'node_type_id');
+        return $this->hasOne(NodeType::class, 'id', 'node_type_id');
     }
 }

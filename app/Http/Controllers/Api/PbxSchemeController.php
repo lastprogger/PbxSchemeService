@@ -15,35 +15,97 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PbxScheme\CreatePbxSchemeRequest;
 use App\Domain\Entity\Pbx;
 use App\Http\Requests\Request;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use InternalApi\DialplanBuilderService\DialplanBuilderServiceApi;
+use Ramsey\Uuid\Uuid;
 
-class PbxSchemeController extends Controller
+class PbxSchemeController extends AbstractApiController
 {
+    /**
+     * @var DialplanBuilderServiceApi
+     */
+    private $dialplanBuilderService;
+
+    public function __construct()
+    {
+        $this->dialplanBuilderService = app('dialplan_builder_service_api');
+    }
+
     /**
      * @param CreatePbxSchemeRequest $request
      * @param CreatePbxSchemeService $createPbxSchemeService
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function store(CreatePbxSchemeRequest $request, CreatePbxSchemeService $createPbxSchemeService)
+    public function store(CreatePbxSchemeRequest $request, CreatePbxSchemeService $createPbxSchemeService): JsonResponse
     {
         try {
+            if ($request->getPbxId() === null) {
+                $pbx          = new Pbx();
+                $pbx->user_id = $request->getUserId();
+
+            } else {
+                $pbx = Pbx::query()->where('id', $request->getPbxId())->first();
+
+                if ($pbx === null) {
+                    $this->respondWithError('PBX not found', Response::HTTP_BAD_REQUEST);
+                }
+            }
+
+            DB::beginTransaction();
             $pbxScheme = $createPbxSchemeService->createPbxScheme($request);
 
-            $pbx = new Pbx();
             $pbx->pbx_scheme_id = $pbxScheme->id;
-            $pbx->user_id = $request->getUserId();
             $pbx->save();
 
-            return response()->json(
-                [
-                    'id' => $pbx->id
-                ]
-            );
+            $data = [
+                'pbx_id'        => $pbx->id,
+                'pbx_scheme_id' => $pbxScheme->id,
+                'company_id'    => Uuid::uuid4()->toString(),
+            ];
+
+            foreach ($pbxScheme->nodes as $node) {
+                $data['nodes'][] = [
+                    'id'        => $node->id,
+                    'data'      => $node->data,
+                    'node_type' => [
+                        'name' => $node->nodeType->name,
+                        'type' => $node->nodeType->type,
+                    ],
+                ];
+            }
+
+            foreach ($pbxScheme->nodeRelations as $relation) {
+                $data['node_relations'][] = [
+                    'type'         => $relation->type,
+                    'from_node_id' => $relation->from_node_id,
+                    'to_node_id'   => $relation->to_node_id,
+                ];
+            }
+
+            $res = $this->dialplanBuilderService->dialplan()->create($data);
+
+            if ($res === null || $res['meta']['code'] !== Response::HTTP_OK) {
+                DB::rollBack();
+
+                return $this->respondWithError('PBX creating failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+            DB::commit();
+
+            return $this->respondOk($pbxScheme->toArray(), 'Successfully saved');
+
         } catch (BadInputDataException $e) {
-            return response($e->getMessage(), Response::HTTP_BAD_REQUEST);
-        } catch (\Exception $e) {
-            return response('INTERNAL SERVER ERROR', Response::HTTP_INTERNAL_SERVER_ERROR);
+            DB::rollBack();
+
+            return $this->respondWithError($e->getMessage(), Response::HTTP_BAD_REQUEST);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return $this->respondInternalError();
         }
     }
 }

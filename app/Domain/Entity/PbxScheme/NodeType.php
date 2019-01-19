@@ -22,8 +22,8 @@ class NodeType extends Model
 
     public $incrementing = false;
 
-    public const NAME_CALL              = 'call';
-    public const NAME_GROUP_CALL        = 'group_call';
+    public const NAME_DIAL              = 'dial';
+    public const NAME_GROUP_DIAL        = 'group_dial';
     public const NAME_SMS_BUSINESS_CARD = 'sms_business_card';
     public const NAME_SMS_APOLOGIES     = 'sms_apologies';
     public const NAME_QUEUE             = 'queue';
@@ -31,7 +31,7 @@ class NodeType extends Model
     public const NAME_VOICE_ANNOUNCE    = 'voice_announce';
 
     public const TYPE_CONDITION = 'condition';
-    public const TYPE_BASIC     = 'basic';
+    public const TYPE_ACTION    = 'action';
 
     protected $table      = 'node_types';
     public    $timestamps = false;

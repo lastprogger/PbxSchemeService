@@ -50,8 +50,6 @@ class CreatePbxSchemeService
      */
     public function createPbxScheme(CreatePbxSchemeRequest $request): PbxScheme
     {
-        DB::beginTransaction();
-
         $tmpIdMap = [];
 
         $pbxScheme = new PbxScheme();
@@ -62,7 +60,6 @@ class CreatePbxSchemeService
             $nodeType = $this->nodeTypeRepository->findById($nodeInputArray['node_type_id']);
 
             if ($nodeType === null) {
-                DB::rollBack();
                 throw new BadInputDataException('Not found NodeType ' . $nodeInputArray['node_type_id']);
             }
 
@@ -85,8 +82,6 @@ class CreatePbxSchemeService
             $pbxSchemeRelation->type          = $relationInputArray['type'];
             $this->pbxSchemeNodeRelationRepository->save($pbxSchemeRelation);
         }
-
-        DB::commit();
 
         return $pbxScheme;
     }

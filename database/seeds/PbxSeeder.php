@@ -17,8 +17,8 @@ class PbxSeeder extends Seeder
     public function run()
     {
         $pbxScheme      = factory(PbxScheme::class)->create();
-        $nodeTypeBasic1 = factory(NodeType::class)->state(NodeType::TYPE_BASIC)->create();
-        $nodeTypeBasic2 = factory(NodeType::class)->state(NodeType::TYPE_BASIC)->create();
+        $nodeTypeBasic1 = factory(NodeType::class)->state(NodeType::TYPE_ACTION)->create();
+        $nodeTypeBasic2 = factory(NodeType::class)->state(NodeType::TYPE_ACTION)->create();
 
         $node1                = new PbxSchemeNode();
         $node1->pbx_scheme_id = $pbxScheme->id;

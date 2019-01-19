@@ -26,8 +26,16 @@ class PbxSchemeControllerTest extends TestCase
 
     public function testCreatePbxScheme()
     {
-        $nodeType1 = factory(NodeType::class)->state(NodeType::TYPE_BASIC)->create();
-        $nodeType2 = factory(NodeType::class)->state(NodeType::TYPE_CONDITION)->create();
+        $nodeType1 = factory(NodeType::class)->state(NodeType::TYPE_ACTION)->create(
+            [
+                'name' => 'Playback',
+            ]
+        );
+        $nodeType2 = factory(NodeType::class)->state(NodeType::TYPE_ACTION)->create(
+            [
+                'name' => 'Dial',
+            ]
+        );
 
         $response = $this->json(
             'POST',
@@ -38,16 +46,15 @@ class PbxSchemeControllerTest extends TestCase
                         'tmp_id'       => 'd87jdo90s',
                         'node_type_id' => $nodeType1->id,
                         'data'         => [
-                            'testdata1' => 'value1',
-                            'testdata2' => 'value2',
+                            'filename' => 'helloworld',
                         ],
                     ],
                     [
                         'tmp_id'       => 'd87j923hdk',
                         'node_type_id' => $nodeType2->id,
                         'data'         => [
-                            'testdata3' => 'value3',
-                            'testdata4' => 'value4',
+                            'endpoint'      => '305',
+                            'music_on_hold' => 'default',
                         ],
                     ],
                 ],
@@ -63,7 +70,7 @@ class PbxSchemeControllerTest extends TestCase
                 AbstractApiRequest::CUSTOM_HEADER_USER_ID => $this->faker->uuid,
             ]
         );
-
+        dd($response->getContent());
         $response->assertOk();
         $response->assertJsonStructure(
             [
