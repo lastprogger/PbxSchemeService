@@ -28,7 +28,7 @@ class NodeType extends Model
     public const NAME_SMS_APOLOGIES     = 'sms_apologies';
     public const NAME_QUEUE             = 'queue';
     public const NAME_SMS               = 'sms';
-    public const NAME_VOICE_ANNOUNCE    = 'voice_announce';
+    public const NAME_PLAYBACK          = 'playback';
 
     public const TYPE_CONDITION = 'condition';
     public const TYPE_ACTION    = 'action';

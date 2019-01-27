@@ -37,35 +37,37 @@ class PbxSchemeControllerTest extends TestCase
             ]
         );
 
-        $response = $this->json(
-            'POST',
-            '/api/1.0/pbx-scheme',
-            [
-                'nodes'     => [
-                    [
-                        'tmp_id'       => 'd87jdo90s',
-                        'node_type_id' => $nodeType1->id,
-                        'data'         => [
-                            'filename' => 'helloworld',
-                        ],
-                    ],
-                    [
-                        'tmp_id'       => 'd87j923hdk',
-                        'node_type_id' => $nodeType2->id,
-                        'data'         => [
-                            'endpoint'      => '305',
-                            'music_on_hold' => 'default',
-                        ],
+        $data = [
+            'nodes'     => [
+                [
+                    'tmp_id'       => 'd87jdo90s',
+                    'node_type_id' => $nodeType1->id,
+                    'data'         => [
+                        'filename' => 'helloworld',
                     ],
                 ],
-                'relations' => [
-                    [
-                        'type'      => 'positive',
-                        'from_node' => 'd87jdo90s',
-                        'to_node'   => 'd87j923hdk',
+                [
+                    'tmp_id'       => 'd87j923hdk',
+                    'node_type_id' => $nodeType2->id,
+                    'data'         => [
+                        'endpoint'      => '305',
+                        'music_on_hold' => 'default',
                     ],
                 ],
             ],
+            'relations' => [
+                [
+                    'type'      => 'positive',
+                    'from_node' => 'd87jdo90s',
+                    'to_node'   => 'd87j923hdk',
+                ],
+            ],
+        ];
+
+        $response = $this->json(
+            'POST',
+            '/api/1.0/pbx-scheme',
+            $data,
             [
                 AbstractApiRequest::CUSTOM_HEADER_USER_ID => $this->faker->uuid,
             ]
