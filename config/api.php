@@ -37,4 +37,13 @@ return [
             ],
         ],
     ],
+
+    'user_service'      => [
+        'host'     => env('SERVICE_USER_HOST'),
+        'endpoint' => [
+            'user'  => [
+                'get_auth_user' => env('SERVICE_USER_HOST') . '/api/'. env('SERVICE_USER_API_VERSION') .'/auth-user',
+            ],
+        ],
+    ],
 ];

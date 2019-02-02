@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa8c52dc24f44ff300a8e16a5432b7aa",
+    "content-hash": "90162f564591668987e9534eff306395",
     "packages": [
         {
             "name": "ApiClientsLibrary",
-            "version": "v1.2.3",
+            "version": "v1.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lastprogger/ApiClientsLibrary.git",
-                "reference": "e57319d5c3b85fe5dbfd66a7b0902399b5e35f75"
+                "reference": "99d19b48f816b8215712fb6e4dae9703cc9bee40"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://satis.telephony.local/dist/apiclientslibrary/apiclientslibrary-e57319d5c3b85fe5dbfd66a7b0902399b5e35f75-zip-207290.tar",
-                "reference": "e57319d5c3b85fe5dbfd66a7b0902399b5e35f75",
-                "shasum": "bdc80ba17439f6af3f63670067cc8353b4c62da1"
+                "url": "http://satis.telephony.local/dist/apiclientslibrary/apiclientslibrary-99d19b48f816b8215712fb6e4dae9703cc9bee40-zip-469cb7.tar",
+                "reference": "99d19b48f816b8215712fb6e4dae9703cc9bee40",
+                "shasum": "f0dd7cb3a5e191f0a570d16b766d1c79c908317f"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.3",
@@ -57,10 +57,10 @@
                 "library"
             ],
             "support": {
-                "source": "https://github.com/lastprogger/ApiClientsLibrary/tree/v1.2.3",
+                "source": "https://github.com/lastprogger/ApiClientsLibrary/tree/v1.3.2",
                 "issues": "https://github.com/lastprogger/ApiClientsLibrary/issues"
             },
-            "time": "2019-01-17T15:54:42+00:00"
+            "time": "2019-02-02T19:19:17+00:00"
         },
         {
             "name": "doctrine/inflector",

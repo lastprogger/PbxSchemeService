@@ -22,9 +22,9 @@ Route::group(
         Controller::ACTION_GROUP_NAME_KEY => Controller::ACTION_GROUP_NAME_PUBLIC_API,
     ],
     function () {
-        Route::resource('pbx-scheme', 'PbxSchemeController');
+        Route::resource('pbx-scheme', 'PbxSchemeController')->middleware('auth.custom');
         Route::resource('pbx', 'PbxController');
-        Route::resource('node-type', 'NodeTypeController');
+        Route::resource('node-type', 'NodeTypeController')->middleware('auth.custom');
     }
 );
 

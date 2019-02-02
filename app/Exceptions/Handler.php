@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
+use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
 use JMS\Serializer\ArrayTransformerInterface;
 use JMS\Serializer\SerializationContext;
@@ -58,72 +59,8 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($request->wantsJson()) {
-//            Log::error($exception);
-            dd($exception);
-            $route = Route::current();
-            if (null === $route) {
-                return parent::render($request, $exception);
-            }
-
-            $action           = $route->action;
-            $doNotSetHttpCode = true;
-            if (isset($action[Controller::ACTION_GROUP_NAME_KEY])) {
-                switch ($action[Controller::ACTION_GROUP_NAME_KEY]) {
-                    case Controller::ACTION_GROUP_NAME_INTERNAL_API:
-                        $doNotSetHttpCode = false;
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            /**
-             * @var SerializerInterface|ArrayTransformerInterface $serializer
-             */
-            $serializer = app(SerializerInterface::class);
-            $context    = SerializationContext::create()
-                                              ->setGroups(['api'])
-                                              ->setVersion($apiVersion)
-                                              ->setSerializeNull(false)
-                                              ->enableMaxDepthChecks();
-
-            switch (true) {
-                case ($exception instanceof Api\ApiException):
-                    $renderException = $exception;
-                    break;
-
-                case ($exception instanceof HttpException):
-                    $errorText       = $exception->getMessage() === '' ? null : $exception->getMessage();
-                    $renderException = new Api\ApiException($exception->getStatusCode(), $errorText);
-                    break;
-
-                case ($exception instanceof ValidationException):
-                    $errorMessageBag = $exception->validator->errors();
-                    $errorKeys       = $errorMessageBag->keys();
-                    $formattedErrors = [];
-
-                    foreach ($errorKeys as $key) {
-                        $formattedErrors[$key] = $errorMessageBag->first($key);
-                    }
-
-                    $errorText = $exception->getMessage() === '' ? null : $exception->getMessage();
-
-                    $renderException = new Api\ApiException($exception->status, $errorText, $formattedErrors);
-                    break;
-
-                default:
-                    $renderException = new Api\ApiException(
-                        Response::HTTP_INTERNAL_SERVER_ERROR,
-                        'Internal server error'
-                    );
-                    break;
-            }
-
-            return response()->json(
-                $serializer->toArray($renderException, $context),
-                $doNotSetHttpCode ? Response::HTTP_OK : $renderException->getCode()
-            );
+        if ($exception instanceof UnauthorizedException) {
+            return response('', Response::HTTP_UNAUTHORIZED);
         }
 
         return parent::render($request, $exception);
