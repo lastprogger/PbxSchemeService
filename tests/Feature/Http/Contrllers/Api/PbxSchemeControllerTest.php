@@ -8,16 +8,21 @@
 
 namespace Tests\Feature\Http\Contrllers\Api;
 
+use App\Domain\Entity\PbxScheme\PbxScheme;
+use App\Domain\Entity\PbxScheme\PbxSchemeNode;
+use App\Domain\Entity\PbxScheme\PbxSchemeNodeRelation;
 use App\Http\Requests\AbstractApiRequest;
 use App\Domain\Entity\PbxScheme\NodeType;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
 
 class PbxSchemeControllerTest extends TestCase
 {
     use DatabaseTransactions;
     use WithFaker;
+    use WithoutMiddleware;
 
     public function setUp()
     {
@@ -77,6 +82,58 @@ class PbxSchemeControllerTest extends TestCase
         $response->assertJsonStructure(
             [
                 'id',
+            ]
+        );
+    }
+
+    public function testGetPbxSchemeById()
+    {
+        $pbxScheme = factory(PbxScheme::class)->create();
+
+        $nodeTypePlayback = factory(NodeType::class)->state(NodeType::TYPE_ACTION)->create(
+            [
+                'name' => 'Playback',
+            ]
+        );
+        $nodeTypeDial     = factory(NodeType::class)->state(NodeType::TYPE_ACTION)->create(
+            [
+                'name' => 'Dial',
+            ]
+        );
+
+        $nodeDial = factory(PbxSchemeNode::class)->state('dial')->create(
+            [
+                'pbx_scheme_id' => $pbxScheme->id,
+                'node_type_id'  => $nodeTypeDial->id,
+            ]
+        );
+
+        $nodePlayback = factory(PbxSchemeNode::class)->state('playback')->create(
+            [
+                'pbx_scheme_id' => $pbxScheme->id,
+                'node_type_id'  => $nodeTypePlayback->id,
+            ]
+        );
+
+        factory(PbxSchemeNodeRelation::class)->state('direct')->create(
+            [
+                'from_node_id' => $nodePlayback->id,
+                'to_node_id'   => $nodeDial->id,
+                'pbx_scheme_id'  => $pbxScheme->id,
+            ]
+        );
+
+        $response = $this->json('GET', '/api/v1/pbx-scheme/' . $pbxScheme->id);
+
+        $response->assertOk();
+
+        $response->assertJsonStructure(
+            [
+                'data' => [
+                    'id',
+                    'nodes',
+                    'node_relations'
+                ],
             ]
         );
     }

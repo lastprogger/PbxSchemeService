@@ -26,7 +26,7 @@ class AuthUserMiddleware
 
         try {
             UserServiceApiFacade::user()->getAuthUser($authorizationHeader);
-        } catch (\Exception $e) {
+        } catch (\Exception $e) {dd($e);
             throw new UnauthorizedException('Unauthorized', 401);
         }
 

@@ -27,7 +27,7 @@ class PbxSchemeNodeRelation extends Model
 {
     use SoftDeletes;
 
-    public const TYPE_ANY      = 'any';
+    public const TYPE_DIRECT   = 'direct';
     public const TYPE_POSITIVE = 'positive';
     public const TYPE_NEGATIVE = 'negative';
 

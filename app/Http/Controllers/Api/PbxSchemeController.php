@@ -9,6 +9,8 @@
 namespace App\Http\Controllers\Api;
 
 
+use App\Domain\Entity\PbxScheme\PbxScheme;
+use App\Domain\Entity\PbxScheme\PbxSchemeNodeRelation;
 use App\Domain\Service\PbxScheme\CreatePbxSchemeService;
 use App\Domain\Service\PbxScheme\Exceptions\BadInputDataException;
 use App\Http\Controllers\Controller;
@@ -19,6 +21,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use InternalApi\DialplanBuilderService\DialplanBuilderServiceApi;
 use Ramsey\Uuid\Uuid;
 
@@ -107,5 +110,29 @@ class PbxSchemeController extends AbstractApiController
 
             return $this->respondInternalError();
         }
+    }
+
+    /**
+     * @param string $apiVersion
+     * @param string $pbxSchemeId
+     *
+     * @return JsonResponse
+     */
+    public function show(string $apiVersion, string $pbxSchemeId): JsonResponse
+    {
+        $validator = Validator::make(['id' => $pbxSchemeId], ['id' => 'uuid']);
+
+        if(!$validator->passes()) {
+            $this->respondNotFound();
+        }
+        /** @var PbxScheme $pbxScheme */
+        $pbxScheme = PbxScheme::find($pbxSchemeId);
+        $pbxScheme->load('nodeRelations', 'nodes');
+
+        if ($pbxScheme === null) {
+            return $this->respondNotFound();
+        }
+
+        return $this->respond($pbxScheme->toArray());
     }
 }

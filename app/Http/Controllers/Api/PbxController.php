@@ -19,7 +19,7 @@ class PbxController extends AbstractApiController
         $validator = Validator::make(['id' => $id], ['id' => 'uuid']);
 
         if (!$validator->passes()) {
-            return response()->make()->setStatusCode(Response::HTTP_BAD_REQUEST);
+            return $this->respondNotFound();
         }
 
         /** @var Pbx $pbx */
