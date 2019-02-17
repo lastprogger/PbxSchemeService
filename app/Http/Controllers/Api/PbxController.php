@@ -3,13 +3,8 @@
 
 namespace App\Http\Controllers\Api;
 
-
 use App\Domain\Entity\Pbx;
-use App\Domain\Entity\PbxScheme\PbxScheme;
-use App\Domain\Entity\PbxScheme\PbxSchemeNode;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
 class PbxController extends AbstractApiController
@@ -24,15 +19,11 @@ class PbxController extends AbstractApiController
 
         /** @var Pbx $pbx */
 //        $pbx = Pbx::find($id);
-        $pbx = Pbx::query()->where('id', $id)->with(['scheme', 'nodes'])->first();
+        $pbx = Pbx::query()->where('id', $id)->first()->load('scheme', 'scheme.nodes', 'scheme.nodeRelations');
 
-//        if ($pbx === null) {
-//            return response('Not found', Response::HTTP_NOT_FOUND);
-//        }
-//        $pbx->scheme->nodes->each(function (PbxSchemeNode $node){
-//            $node->nodeType;
-//        });
-//        $pbx->scheme->nodeRelations;
+        if ($pbx === null) {
+            return $this->respondNotFound();
+        }
 
         return response()->json($pbx->toArray());
     }
