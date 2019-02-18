@@ -23,6 +23,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use InternalApi\DialplanBuilderService\DialplanBuilderServiceApi;
+use InternalApi\UserServiceApi\UserServiceApi;
 use Ramsey\Uuid\Uuid;
 
 class PbxSchemeController extends AbstractApiController
@@ -45,10 +46,12 @@ class PbxSchemeController extends AbstractApiController
      */
     public function store(CreatePbxSchemeRequest $request, CreatePbxSchemeService $createPbxSchemeService): JsonResponse
     {
+        $user = UserServiceApi::getCurrentUser();
+
         try {
             if ($request->getPbxId() === null) {
                 $pbx          = new Pbx();
-                $pbx->user_id = $request->getUserId();
+                $pbx->user_id = $user->getId();
 
             } else {
                 $pbx = Pbx::query()->where('id', $request->getPbxId())->first();
@@ -67,7 +70,7 @@ class PbxSchemeController extends AbstractApiController
             $data = [
                 'pbx_id'        => $pbx->id,
                 'pbx_scheme_id' => $pbxScheme->id,
-                'company_id'    => Uuid::uuid4()->toString(),
+                'company_id'    => $user->getCompanyId(),
             ];
 
             foreach ($pbxScheme->nodes as $node) {
@@ -127,11 +130,12 @@ class PbxSchemeController extends AbstractApiController
         }
         /** @var PbxScheme $pbxScheme */
         $pbxScheme = PbxScheme::find($pbxSchemeId);
-        $pbxScheme->load('nodeRelations', 'nodes');
 
         if ($pbxScheme === null) {
             return $this->respondNotFound();
         }
+
+        $pbxScheme->load('nodeRelations', 'nodes');
 
         return $this->respond($pbxScheme->toArray());
     }

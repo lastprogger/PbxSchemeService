@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Validation\UnauthorizedException;
 use InternalApi\PbxSchemeServiceApi\Facade\UserServiceApiFacade;
+use InternalApi\UserServiceApi\UserServiceApi;
 
 class AuthUserMiddleware
 {
@@ -25,8 +26,10 @@ class AuthUserMiddleware
         }
 
         try {
-            UserServiceApiFacade::user()->getAuthUser($authorizationHeader);
-        } catch (\Exception $e) {dd($e);
+            $user = UserServiceApiFacade::user()->getAuthUser($authorizationHeader);
+            UserServiceApi::setCurrentUser($user);
+
+        } catch (\Exception $e) {
             throw new UnauthorizedException('Unauthorized', 401);
         }
 

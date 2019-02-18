@@ -8,17 +8,17 @@
     "packages": [
         {
             "name": "ApiClientsLibrary",
-            "version": "v1.3.2",
+            "version": "v1.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lastprogger/ApiClientsLibrary.git",
-                "reference": "99d19b48f816b8215712fb6e4dae9703cc9bee40"
+                "reference": "118b2f28d812110c8656abad1e34b25e997bfcdd"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://satis.telephony.local/dist/apiclientslibrary/apiclientslibrary-99d19b48f816b8215712fb6e4dae9703cc9bee40-zip-469cb7.tar",
-                "reference": "99d19b48f816b8215712fb6e4dae9703cc9bee40",
-                "shasum": "f0dd7cb3a5e191f0a570d16b766d1c79c908317f"
+                "url": "http://satis.telephony.local/dist/apiclientslibrary/apiclientslibrary-118b2f28d812110c8656abad1e34b25e997bfcdd-zip-343572.tar",
+                "reference": "118b2f28d812110c8656abad1e34b25e997bfcdd",
+                "shasum": "b7603811bdf483ccf2cf2a2baf23ecc38c48d8d5"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.3",
@@ -57,10 +57,10 @@
                 "library"
             ],
             "support": {
-                "source": "https://github.com/lastprogger/ApiClientsLibrary/tree/v1.3.2",
+                "source": "https://github.com/lastprogger/ApiClientsLibrary/tree/v.1.3.3",
                 "issues": "https://github.com/lastprogger/ApiClientsLibrary/issues"
             },
-            "time": "2019-02-02T19:19:17+00:00"
+            "time": "2019-02-18T20:49:05+00:00"
         },
         {
             "name": "doctrine/inflector",
