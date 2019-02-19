@@ -23,7 +23,7 @@ Route::group(
     ],
     function () {
         Route::resource('pbx-scheme', 'PbxSchemeController')->middleware('auth.custom');
-        Route::resource('pbx', 'PbxController');
+        Route::resource('pbx', 'PbxController')->middleware('auth.custom');
         Route::resource('node-type', 'NodeTypeController')->middleware('auth.custom');
 
         Route::get('pbx-scheme-preset', 'PbxSchemePresetsController@index');

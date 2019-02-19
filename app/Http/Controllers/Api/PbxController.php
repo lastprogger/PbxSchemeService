@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Domain\Entity\Pbx;
 use App\Http\Requests\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use InternalApi\UserServiceApi\UserServiceApi;
 
 class PbxController extends AbstractApiController
 {
@@ -26,5 +28,25 @@ class PbxController extends AbstractApiController
         }
 
         return response()->json($pbx->toArray());
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function index(Request $request): JsonResponse
+    {
+        $user = UserServiceApi::getCurrentUser();
+
+        $pbxList = Pbx::query()
+                      ->where('company_id', $user->getCompanyId())
+                      ->get();
+
+        if ($request->get('with_scheme', false)) {
+            $pbxList->load('scheme', 'scheme.nodes', 'scheme.nodeRelations');
+        }
+
+        return $this->respondOk($pbxList->toArray());
     }
 }
