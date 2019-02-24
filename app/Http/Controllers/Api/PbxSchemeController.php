@@ -52,6 +52,7 @@ class PbxSchemeController extends AbstractApiController
             if ($request->getPbxId() === null) {
                 $pbx          = new Pbx();
                 $pbx->user_id = $user->getId();
+                $pbx->company_id = $user->getCompanyId();
 
             } else {
                 $pbx = Pbx::query()->where('id', $request->getPbxId())->first();

@@ -17,6 +17,7 @@ use Ramsey\Uuid\Uuid;
  * @property string         $id
  * @property string         $pbx_scheme_id
  * @property string         $user_id
+ * @property string         $company_id
  * @property string         $name
  * @property Carbon         $deleted_at
  * @property Carbon         $created_at
