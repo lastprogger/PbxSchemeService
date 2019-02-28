@@ -32,9 +32,9 @@ class CreatePbxSchemeRequest extends AbstractApiRequest
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
-    public function getPbxId(): ?int
+    public function getPbxId(): ?string
     {
         return $this->input('pbx_id');
     }
