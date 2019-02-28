@@ -19,7 +19,7 @@ class CreatePbxSchemeRequest extends AbstractApiRequest
     public function rules(): array
     {
         return [
-            'pbx_id'                => 'int',
+            'pbx_id'                => 'uuid',
             'nodes'                 => 'required|array',
             'nodes.*.tmp_id'        => 'required|string',
             'nodes.*.node_type_id'  => 'required|string',
